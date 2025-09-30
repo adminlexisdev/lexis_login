@@ -17,7 +17,10 @@ export class Usuario {
   @Column({ name: 'usu_password' })
   usuPassword: string;
 
-  @Column({ default: true, name: 'usu_cuenta_bloqueada' })
+  @Column({ default: false, name: 'usu_has_mfa' })
+  usuHasMfa: boolean;
+
+  @Column({ default: true, name: 'usu_cuenta_bloqueda' })
   usuCuentaBloqueada: boolean;
 
   @Column({ default: true, name: 'usu_cuenta_expirada' })

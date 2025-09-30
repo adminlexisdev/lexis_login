@@ -1,13 +1,13 @@
 import { ViewColumn, ViewEntity } from 'typeorm';
 
-@ViewEntity()
+@ViewEntity({ name: 'usuarios_activos' })
 export class UsuariosActivos {
-  @ViewColumn()
+  @ViewColumn({ name: 'pro_nombre' })
   proNombre: string;
 
-  @ViewColumn()
+  @ViewColumn({ name: 'usu_email' })
   usuEmail: string;
 
-  @ViewColumn()
+  @ViewColumn({ name: 'cue_nombre' })
   cueNombre: string;
 }
