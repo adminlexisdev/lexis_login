@@ -21,4 +21,12 @@ export class UsuariosActivosService {
       where: { usuEmail },
     });
   }
+
+  getUserServices(usuEmail: string) {
+    return this.usuariosActivosRepository
+      .createQueryBuilder('ua')
+      .select('ua.proNombre', 'service')
+      .where('ua.usuEmail = :usuEmail', { usuEmail })
+      .getRawMany();
+  }
 }

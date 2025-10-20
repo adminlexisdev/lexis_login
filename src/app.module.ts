@@ -7,6 +7,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { getTypeOrmConfig } from './config/database/mysql.config';
 import { UsuariosActivosModule } from './modules/usuarios-activos/usuarios-activos.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { BrevoModule } from './services/brevo/brevo.module';
+import { MfaModule } from './modules/mfa/mfa.module';
+import { UserTokenInfoModule } from './modules/user_token_info/user_token_info.module';
+import { EurekaModule } from './config/eureka/eureka.module';
 
 @Module({
   imports: [
@@ -21,6 +25,10 @@ import { AuthModule } from './modules/auth/auth.module';
     UsuarioModule,
     UsuariosActivosModule,
     AuthModule,
+    BrevoModule,
+    MfaModule,
+    UserTokenInfoModule,
+    EurekaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

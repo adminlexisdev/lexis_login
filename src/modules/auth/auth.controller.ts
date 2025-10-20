@@ -1,11 +1,20 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { JwtAuthGuard } from '../../guards/jwt-auth.guard';
 import { Request } from 'express';
 import { JwtPayload } from '../../interfaces/jwt-payload.interface';
+import { MfaRequestDto } from './dto/mfa.request.dto';
+import { MfaValidateDto } from './dto/mfa.validate.dto';
 
-// Extender el tipo Request para incluir user
 interface AuthenticatedRequest extends Request {
   user: JwtPayload;
 }
@@ -15,17 +24,9 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('login')
+  @HttpCode(HttpStatus.OK)
   login(@Body() loginDto: LoginDto) {
     return this.authService.login(loginDto);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('me')
-  getProfile(@Req() req: AuthenticatedRequest) {
-    return {
-      message: 'Perfil de usuario autenticado',
-      user: req.user,
-    };
   }
 
   @UseGuards(JwtAuthGuard)
@@ -36,5 +37,27 @@ export class AuthController {
       message: 'Token válido',
       user: req.user,
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('mfa/request')
+  @HttpCode(HttpStatus.OK)
+  requestMfaCode(
+    @Req() httpReq: AuthenticatedRequest,
+    @Body() body: MfaRequestDto,
+  ) {
+    const authorization = httpReq.headers.authorization || '';
+    return this.authService.requestMfaCode(authorization, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('mfa/validate')
+  @HttpCode(HttpStatus.OK)
+  validateMfaCode(
+    @Req() httpReq: AuthenticatedRequest,
+    @Body() body: MfaValidateDto,
+  ) {
+    const authorization = httpReq.headers.authorization || '';
+    return this.authService.validateMfaCode(authorization, body);
   }
 }

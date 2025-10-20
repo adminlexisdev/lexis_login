@@ -1,12 +1,14 @@
-export interface JwtPayload {
-  user_name: string;
-  client_id: string;
-  jti: string;
-  authorities: string[];
+export interface LoginResponse {
+  access_token: string;
+  token_type: string;
+  refresh_token?: string;
+  expires_in: string;
   scope: string[];
-  data: JwtPayloadData;
+  data: UserData;
+  jti: string;
 }
-interface JwtPayloadData {
+
+interface UserData {
   cueId: number;
   cuenta: string;
   usuId: number;
