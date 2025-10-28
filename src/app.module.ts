@@ -11,6 +11,7 @@ import { BrevoModule } from './services/brevo/brevo.module';
 import { MfaModule } from './modules/mfa/mfa.module';
 import { UserTokenInfoModule } from './modules/user_token_info/user_token_info.module';
 import { EurekaModule } from './config/eureka/eureka.module';
+import { ServiciosActivosAdquiridosModule } from './modules/servicios_activos_adquiridos/servicios_activos_adquiridos.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { EurekaModule } from './config/eureka/eureka.module';
     MfaModule,
     UserTokenInfoModule,
     EurekaModule,
+    ServiciosActivosAdquiridosModule,
   ],
   controllers: [AppController],
   providers: [AppService],

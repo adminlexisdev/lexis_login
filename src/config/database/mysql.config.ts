@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { TypeOrmNestLogger } from './typeorm-nest-logger';
 
 export const getTypeOrmConfig = async (
   configService: ConfigService,
@@ -12,5 +13,6 @@ export const getTypeOrmConfig = async (
   database: configService.get<string>('DB_NAME'),
   autoLoadEntities: true,
   synchronize: false,
-  logging: true,
+  logger: new TypeOrmNestLogger(),
+  logging: ['error', 'query', 'warn', 'schema', 'migration'],
 });

@@ -9,6 +9,7 @@ export interface JwtPayload {
 interface JwtPayloadData {
   cueId: number;
   cuenta: string;
+  sadId?: number;
   usuId: number;
   usuNombre: string;
   usuApellido: string;

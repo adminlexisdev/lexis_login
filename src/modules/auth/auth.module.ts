@@ -9,10 +9,18 @@ import { UsuarioModule } from '../usuario/usuario.module';
 import { BrevoModule } from '../../services/brevo/brevo.module';
 import { MfaModule } from '../mfa/mfa.module';
 import { UserTokenInfoModule } from '../user_token_info/user_token_info.module';
+import { ExternalJwtTokenService } from '../../services/jwt/external-jwt-token.service';
+import { ExternalJwtAuthGuard } from '../../guards/external-jwt-auth.guard';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, JwtTokenService, JwtAuthGuard],
+  providers: [
+    AuthService,
+    JwtTokenService,
+    JwtAuthGuard,
+    ExternalJwtTokenService,
+    ExternalJwtAuthGuard,
+  ],
   imports: [
     UsuariosActivosModule,
     JwtModule.register({
@@ -24,6 +32,11 @@ import { UserTokenInfoModule } from '../user_token_info/user_token_info.module';
     MfaModule,
     UserTokenInfoModule,
   ],
-  exports: [JwtTokenService, JwtAuthGuard],
+  exports: [
+    JwtTokenService,
+    JwtAuthGuard,
+    ExternalJwtTokenService,
+    ExternalJwtAuthGuard,
+  ],
 })
 export class AuthModule {}

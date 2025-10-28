@@ -12,4 +12,8 @@ export class UserTokenInfoService {
   async getUserTokenInfo(usuId: number): Promise<UserTokenInfo | null> {
     return this.userTokenInfoRepository.findOne({ where: { usuId } });
   }
+
+  async getUsersAccountByUserId(usuId: number): Promise<UserTokenInfo[]> {
+    return this.userTokenInfoRepository.find({ where: { usuId } });
+  }
 }

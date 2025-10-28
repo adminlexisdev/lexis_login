@@ -155,10 +155,15 @@ export class AuthService {
   ): Promise<LoginResponse> {
     try {
       const data = this.jwtTokenService.getDataFromToken(tokenOrBearer);
+      data.service = mfaValidateDto.service;
 
       const services = await this.usuariosActivosService.getUserServices(
         data.usuEmail,
       );
+
+      data.sadId = +services.find((s) => s.service === mfaValidateDto.service)
+        ?.sadId;
+
       const userServices = services.map((s) => s.service);
 
       if (!userServices.includes(mfaValidateDto.service)) {
@@ -172,8 +177,12 @@ export class AuthService {
         mfaValidateDto.service,
       );
 
+      if (!mfaRecord) {
+        throw new UnauthorizedException('Código MFA inválido o ya usado');
+      }
+
       //5m = 5 * 60000 ms
-      if (mfaRecord.createdAt.getTime() + 5 * 60000 < new Date().getTime()) {
+      if (mfaRecord.createdAt.getTime() + 5 * 60000 < Date.now()) {
         await this.mfaService.desactiveMfaCode(
           data.usuId,
           mfaValidateDto.service,
@@ -181,11 +190,6 @@ export class AuthService {
         throw new UnauthorizedException('Código MFA inválido o ya usado');
       }
 
-      if (!mfaRecord) {
-        throw new UnauthorizedException('Código MFA inválido o ya usado');
-      }
-      console.log('Código MFA recibido:', mfaValidateDto.code);
-      console.log('Código MFA almacenado:', mfaRecord.mfaCode);
       const isCodeValid = await bcrypt.compare(
         mfaValidateDto.code,
         mfaRecord.mfaCode,
