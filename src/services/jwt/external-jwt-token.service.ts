@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { JwtPayload } from '../../interfaces/jwt-payload.interface';
+import { JwtExternalPayload } from 'src/interfaces/jwt-external.payload.interface';
 
 @Injectable()
 export class ExternalJwtTokenService {
@@ -14,17 +14,19 @@ export class ExternalJwtTokenService {
     this.secret = this.configService.get<string>('JWT_EXTERNAL_SECRET');
   }
 
-  verify(token: string): JwtPayload {
-    return this.jwtService.verify<JwtPayload>(token, { secret: this.secret });
+  verify(token: string): JwtExternalPayload {
+    return this.jwtService.verify<JwtExternalPayload>(token, {
+      secret: this.secret,
+    });
   }
 
-  getPayloadFromToken(tokenOrBearer: string): JwtPayload {
+  getPayloadFromToken(tokenOrBearer: string): JwtExternalPayload {
     const token = this.extractToken(tokenOrBearer);
     return this.verify(token);
   }
 
-  getDataFromToken(tokenOrBearer: string): JwtPayload['data'] {
-    return this.getPayloadFromToken(tokenOrBearer).data;
+  getDataFromToken(tokenOrBearer: string): JwtExternalPayload {
+    return this.getPayloadFromToken(tokenOrBearer);
   }
 
   private extractToken(tokenOrBearer: string): string {

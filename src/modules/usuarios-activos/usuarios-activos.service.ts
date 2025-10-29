@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ServiciosActivosAdquiridosService } from '../servicios_activos_adquiridos/servicios_activos_adquiridos.service';
 import { GetUsuariosActivosInterface } from './interfaces/get-usuarios.interface';
+import { ExternalJwtTokenService } from 'src/services/jwt/external-jwt-token.service';
 
 @Injectable()
 export class UsuariosActivosService {
@@ -11,6 +12,7 @@ export class UsuariosActivosService {
     @InjectRepository(UsuariosActivos)
     private readonly usuariosActivosRepository: Repository<UsuariosActivos>,
     private readonly serviciosActivosAdquiridosService: ServiciosActivosAdquiridosService,
+    private readonly externalJwtTokenService: ExternalJwtTokenService,
   ) {}
 
   findByProNombreAndEmail(proNombre: string, usuEmail: string) {
@@ -37,11 +39,10 @@ export class UsuariosActivosService {
   async getUsuariosByCuentaAndServicio(
     token: string,
   ): Promise<GetUsuariosActivosInterface> {
-    //const { cueId } = this.extractPayloadFromToken(token);
+    const tokenResp = this.externalJwtTokenService.getPayloadFromToken(token);
 
-    const cueId = 1; // Placeholder value
-    const proNombre = 'ECLEX_PRO'; // Placeholder value
-    //const proNombre = 'LITIGANT_PLUS'; // Placeholder value
+    const cueId = tokenResp.cueId;
+    const proNombre = 'LEXIS_TOTAL';
 
     const usuarios = await this.usuariosActivosRepository.find({
       where: { cueId, proNombre },

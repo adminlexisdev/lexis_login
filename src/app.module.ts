@@ -12,6 +12,7 @@ import { MfaModule } from './modules/mfa/mfa.module';
 import { UserTokenInfoModule } from './modules/user_token_info/user_token_info.module';
 import { EurekaModule } from './config/eureka/eureka.module';
 import { ServiciosActivosAdquiridosModule } from './modules/servicios_activos_adquiridos/servicios_activos_adquiridos.module';
+import { JwtSharedModule } from './services/jwt/jwt.module';
 
 @Module({
   imports: [
@@ -23,6 +24,8 @@ import { ServiciosActivosAdquiridosModule } from './modules/servicios_activos_ad
       inject: [ConfigService],
       useFactory: getTypeOrmConfig,
     }),
+    // Make JWT services/guards globally available
+    JwtSharedModule,
     UsuarioModule,
     UsuariosActivosModule,
     AuthModule,
