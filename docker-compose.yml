@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: lexis_login:latest
+    container_name: lexis_login_app
+    env_file:
+      - .env
+    ports:
+      - "3010:3000"
+    restart: unless-stopped
+    # If your app listens on a different PORT in .env, adjust the port mapping accordingly
