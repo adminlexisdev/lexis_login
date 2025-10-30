@@ -116,8 +116,7 @@ export class AuthService {
       if (data.usuHasMfa === false) {
         throw new UnauthorizedException('El usuario no tiene MFA habilitado');
       }
-      //const code = Math.floor(100000 + Math.random() * 900000).toString();
-      const code = '123456'; // Código fijo para pruebas
+      const code = Math.floor(100000 + Math.random() * 900000).toString();
       const services = await this.usuariosActivosService.getUserServices(
         data.usuEmail,
       );
@@ -141,7 +140,7 @@ export class AuthService {
         code,
       };
       console.log('Código MFA enviado:', code);
-      //this.brevoService.sendMail(data.usuEmail, 926, params);
+      this.brevoService.sendMail(data.usuEmail, 926, params);
 
       return { message: 'El email ha sido enviado correctamente' };
     } catch (error) {
