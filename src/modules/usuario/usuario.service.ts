@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { LaasService } from 'src/services/laas/laas.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { ExternalJwtTokenService } from 'src/services/jwt/external-jwt-token.service';
-import { console } from 'node:inspector/promises';
+import { DeleteUsuarioDto } from './dto/delete-usuario.dto';
 
 @Injectable()
 export class UsuarioService {
@@ -23,13 +23,26 @@ export class UsuarioService {
   async createUsuario(usuarioDto: CreateUsuarioDto, token: string) {
     try {
       const tokenResp = this.externalJwtTokenService.getPayloadFromToken(token);
-      console.log('Token Response:', tokenResp);
-      const response = await this.laasService.addLitigantUser(
+
+      return await this.laasService.addLitigantUser(
         usuarioDto,
         tokenResp.sadId,
       );
+    } catch (error) {
+      throw new BadRequestException(error.message);
+    }
+  }
 
-      return response;
+  async deleteUsuario(deleteUsuarioDto: DeleteUsuarioDto, token: string) {
+    try {
+      const tokenResp = this.externalJwtTokenService.getPayloadFromToken(token);
+
+      return await this.laasService.deleteLitigantUser(
+        deleteUsuarioDto.invId,
+        tokenResp.usuId,
+        tokenResp.cueId,
+        tokenResp.cuenta,
+      );
     } catch (error) {
       throw new BadRequestException(error.message);
     }

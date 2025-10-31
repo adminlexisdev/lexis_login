@@ -82,7 +82,7 @@ export class AuthService {
 
     const accessToken = this.jwtTokenService.sign(
       payload,
-      usuario.usuHasMfa ? '5m' : '1h',
+      usuario.usuHasMfa ? '10m' : '1h',
     );
 
     const refreshToken = 'todotoken';
@@ -90,7 +90,7 @@ export class AuthService {
       access_token: accessToken,
       token_type: 'bearer',
       refresh_token: usuario.usuHasMfa ? undefined : refreshToken,
-      expires_in: usuario.usuHasMfa ? '5m' : '1h',
+      expires_in: usuario.usuHasMfa ? '10m' : '1h',
       scope: ['read'],
       data: payload.data,
       jti: payload.jti,
@@ -139,7 +139,6 @@ export class AuthService {
       const params = {
         code,
       };
-      console.log('Código MFA enviado:', code);
       this.brevoService.sendMail(data.usuEmail, 926, params);
 
       return { message: 'El email ha sido enviado correctamente' };
@@ -177,7 +176,7 @@ export class AuthService {
       );
 
       if (!mfaRecord) {
-        throw new UnauthorizedException('Código MFA inválido o ya usado');
+        throw new UnauthorizedException('Código MFA inválido o ya usado.');
       }
 
       //5m = 5 * 60000 ms

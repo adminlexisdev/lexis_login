@@ -5,6 +5,9 @@ export class UsuariosActivos {
   @ViewColumn({ name: 'pro_nombre' })
   proNombre: string;
 
+  @ViewColumn({ name: 'inv_id' })
+  invId: number;
+
   @ViewColumn({ name: 'usu_id' })
   usuId: number;
 

@@ -151,4 +151,34 @@ export class LaasService {
     });
     return resp.data;
   }
+
+  async deleteLitigantUser(
+    invId: number,
+    usuId: number,
+    cueId: number,
+    cuenta: string,
+  ) {
+    const token = await this.getValidAccessToken();
+    const url = `${this.url}/subscripcion/delete_litigant_invitacion`;
+
+    const options: AxiosRequestConfig = {
+      method: 'POST',
+      url,
+      headers: {
+        'content-type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        invId,
+        usuId,
+        cueId,
+        cuenta,
+      },
+    };
+
+    const resp = await axios(options).catch((error) => {
+      throw error?.response?.data || error;
+    });
+    return resp.data;
+  }
 }

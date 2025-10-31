@@ -42,11 +42,11 @@ export class UsuariosActivosService {
     const tokenResp = this.externalJwtTokenService.getPayloadFromToken(token);
 
     const cueId = tokenResp.cueId;
-    const proNombre = 'LEXIS_TOTAL';
+    const proNombre = 'LITIGANT_PLUS';
 
     const usuarios = await this.usuariosActivosRepository.find({
       where: { cueId, proNombre },
-      select: ['usuId', 'usuNombre', 'usuApellido', 'usuEmail'],
+      select: ['invId', 'usuId', 'usuNombre', 'usuApellido', 'usuEmail'],
       order: { usuApellido: 'ASC', usuNombre: 'ASC' },
     });
 
@@ -58,9 +58,9 @@ export class UsuariosActivosService {
 
     return {
       usuarios,
-      total: servicioInfo.paqAccesos,
+      total: servicioInfo?.paqAccesos || 0,
       registrados: usuarios.length,
-      sadId: servicioInfo.sadId,
+      sadId: servicioInfo?.sadId,
     };
   }
 }
