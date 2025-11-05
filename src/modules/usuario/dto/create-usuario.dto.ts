@@ -1,10 +1,10 @@
 import { IsAlpha, IsEmail, IsNumberString, IsOptional } from 'class-validator';
 
 export class CreateUsuarioDto {
-  @IsAlpha()
+  @IsAlpha('es-ES')
   usuNombre: string;
 
-  @IsAlpha()
+  @IsAlpha('es-ES')
   usuApellido: string;
 
   @IsEmail()
