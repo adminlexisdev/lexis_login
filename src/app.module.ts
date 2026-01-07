@@ -13,6 +13,7 @@ import { UserTokenInfoModule } from './modules/user_token_info/user_token_info.m
 import { EurekaModule } from './config/eureka/eureka.module';
 import { ServiciosActivosAdquiridosModule } from './modules/servicios_activos_adquiridos/servicios_activos_adquiridos.module';
 import { JwtSharedModule } from './services/jwt/jwt.module';
+import { AnalyticsService } from './services/analytics/analytics.service';
 
 @Module({
   imports: [
@@ -36,6 +37,6 @@ import { JwtSharedModule } from './services/jwt/jwt.module';
     ServiciosActivosAdquiridosModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, AnalyticsService],
 })
 export class AppModule {}

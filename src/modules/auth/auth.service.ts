@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { LoginDto } from './dto/login.dto';
 import { UsuariosActivosService } from '../usuarios-activos/usuarios-activos.service';
@@ -12,8 +12,11 @@ import { MfaRequestDto } from './dto/mfa.request.dto';
 import { MfaService } from '../mfa/mfa.service';
 import { MfaValidateDto } from './dto/mfa.validate.dto';
 import { UserTokenInfoService } from '../user_token_info/user_token_info.service';
+import { AnalyticsService } from 'src/services/analytics/analytics.service';
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     private readonly usuariosActivosService: UsuariosActivosService,
     private readonly jwtTokenService: JwtTokenService,
@@ -21,6 +24,7 @@ export class AuthService {
     private readonly brevoService: BrevoService,
     private readonly mfaService: MfaService,
     private readonly userTokenInfoService: UserTokenInfoService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   async login(loginDto: LoginDto): Promise<LoginResponse> {
@@ -86,6 +90,22 @@ export class AuthService {
     );
 
     const refreshToken = 'todotoken';
+
+    try {
+      this.analyticsService.saveLoginAnalytics({
+        usuEmail: userTokenInfo.usuEmail,
+        cuenta: userTokenInfo.cuenta,
+        sectorCuenta: userTokenInfo.sector,
+        proNombre: 'LITIGANT_PLUS_NO_MFA',
+        dispositivo: 'WEB',
+      });
+    } catch (error: any) {
+      this.logger.error(
+        `Error al enviar analítica de login: ${
+          error.response?.status || error.message
+        }`,
+      );
+    }
     return {
       access_token: accessToken,
       token_type: 'bearer',
@@ -113,9 +133,9 @@ export class AuthService {
     try {
       const data = this.jwtTokenService.getDataFromToken(tokenOrBearer);
 
-      if (data.usuHasMfa === false) {
+      /*  if (data.usuHasMfa === false) {
         throw new UnauthorizedException('El usuario no tiene MFA habilitado');
-      }
+      } */
       const code = Math.floor(100000 + Math.random() * 900000).toString();
       const services = await this.usuariosActivosService.getUserServices(
         data.usuEmail,
@@ -211,6 +231,22 @@ export class AuthService {
         user_name: data.usuEmail,
       };
       const accessToken = this.jwtTokenService.sign(newPayload, '1h');
+
+      try {
+        this.analyticsService.saveLoginAnalytics({
+          usuEmail: data.usuEmail,
+          cuenta: data.cuenta,
+          sectorCuenta: data.sector,
+          proNombre: 'LITIGANT_PLUS',
+          dispositivo: 'WEB',
+        });
+      } catch (error: any) {
+        this.logger.error(
+          `Error al enviar analítica de login: ${
+            error.response?.status || error.message
+          }`,
+        );
+      }
 
       return {
         access_token: accessToken,

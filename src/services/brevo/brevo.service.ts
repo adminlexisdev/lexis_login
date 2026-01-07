@@ -15,15 +15,22 @@ export class BrevoService {
 
   sendMail(sendTo: string, templateId: number, params: Record<string, any>) {
     try {
-      this.apiInstance.sendTransacEmail({
-        to: [
-          {
-            email: sendTo,
-          },
-        ],
-        templateId: templateId,
-        params,
-      });
+      this.apiInstance
+        .sendTransacEmail({
+          to: [
+            {
+              email: sendTo,
+            },
+          ],
+          templateId: templateId,
+          params,
+        })
+        .then((response: any) => {
+          logger.log('EMAIL SENT SUCCESSFULLY: ', response);
+        })
+        .catch((error: any) => {
+          logger.log('ERROR SENDING EMAIL: ', error);
+        });
     } catch (error) {
       logger.log('ERROR SENDING EMAIL: ', error);
     }

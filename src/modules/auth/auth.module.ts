@@ -7,6 +7,7 @@ import { MfaModule } from '../mfa/mfa.module';
 import { UserTokenInfoModule } from '../user_token_info/user_token_info.module';
 import { JwtSharedModule } from '../../services/jwt/jwt.module';
 import { UsuariosActivosModule } from '../usuarios-activos/usuarios-activos.module';
+import { AnalyticsModule } from 'src/services/analytics/analytics.module';
 
 @Module({
   controllers: [AuthController],
@@ -18,6 +19,7 @@ import { UsuariosActivosModule } from '../usuarios-activos/usuarios-activos.modu
     BrevoModule,
     MfaModule,
     UserTokenInfoModule,
+    AnalyticsModule,
   ],
   exports: [],
 })
