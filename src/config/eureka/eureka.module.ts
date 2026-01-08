@@ -8,11 +8,12 @@ export class EurekaModule implements OnModuleInit, OnModuleDestroy {
     this.eurekaClient = new Eureka({
       instance: {
         app: 'service-nest-login', // Your application name
-        hostName: 'localhost',
-        ipAddr: 'localhost',
-        statusPageUrl: 'http://localhost:3000/status',
+        hostName: process.env.EUREKA_INSTANCE_HOSTNAME,
+        instanceId: `${process.env.EUREKA_INSTANCE_HOSTNAME}:${Math.random().toString(36).substr(2, 5)}`,
+        ipAddr: process.env.EUREKA_INSTANCE_IP,
+        statusPageUrl: process.env.EUREKA_INSTANCE_STATUS,
         port: {
-          $: 3000,
+          $: process.env.EUREKA_INSTANCE_PORT,
           '@enabled': true,
         },
         vipAddress: 'service-nest-login',
@@ -22,8 +23,8 @@ export class EurekaModule implements OnModuleInit, OnModuleDestroy {
         },
       },
       eureka: {
-        host: 'localhost',
-        port: 8761, // Eureka server port
+        host: process.env.EUREKA_HOST,
+        port: 8761,
         //servicePath: '/eureka/apps/',
       },
     });

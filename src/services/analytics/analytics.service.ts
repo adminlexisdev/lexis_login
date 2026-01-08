@@ -3,10 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import axios, { AxiosRequestConfig } from 'axios';
 
 interface LoginSendData {
-  usuEmail: string;
-  cuenta: string;
-  sectorCuenta: string;
-  proNombre: string;
+  token: string;
   dispositivo: string;
   ip?: string;
 }
@@ -25,9 +22,9 @@ export class AnalyticsService {
     const config: AxiosRequestConfig = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: data.token,
       },
     };
-    data.dispositivo = 'WEB';
 
     axios
       .post(endpoint, data, config)

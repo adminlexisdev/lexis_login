@@ -59,7 +59,7 @@ export class AuthService {
 
     const payload: JwtPayload = {
       user_name: usuario.usuEmail,
-      client_id: 'LEXIS_PP',
+      client_id: 'NEW_LITIGANT_PLUS',
       jti: uuidv4(),
       authorities: userTokenInfo.authorities.split(','),
       scope: ['read'],
@@ -72,7 +72,7 @@ export class AuthService {
         usuEmail: usuario.usuEmail,
         services: userTokenInfo.services.split(','),
         authorities: userTokenInfo.authorities.split(','),
-        service: 'LEXIS_PP',
+        service: 'NEW_LITIGANT_PLUS',
         usuLitigant: userTokenInfo.usuLitigant,
         usuLitigantServices: userTokenInfo.usuLitigantServices,
         usuLitigantEstado: userTokenInfo.usuLitigantEstado,
@@ -91,21 +91,6 @@ export class AuthService {
 
     const refreshToken = 'todotoken';
 
-    try {
-      this.analyticsService.saveLoginAnalytics({
-        usuEmail: userTokenInfo.usuEmail,
-        cuenta: userTokenInfo.cuenta,
-        sectorCuenta: userTokenInfo.sector,
-        proNombre: 'LITIGANT_PLUS_NO_MFA',
-        dispositivo: 'WEB',
-      });
-    } catch (error: any) {
-      this.logger.error(
-        `Error al enviar analítica de login: ${
-          error.response?.status || error.message
-        }`,
-      );
-    }
     return {
       access_token: accessToken,
       token_type: 'bearer',
@@ -170,6 +155,7 @@ export class AuthService {
   async validateMfaCode(
     tokenOrBearer: string,
     mfaValidateDto: MfaValidateDto,
+    ip?: string,
   ): Promise<LoginResponse> {
     try {
       const data = this.jwtTokenService.getDataFromToken(tokenOrBearer);
@@ -234,11 +220,9 @@ export class AuthService {
 
       try {
         this.analyticsService.saveLoginAnalytics({
-          usuEmail: data.usuEmail,
-          cuenta: data.cuenta,
-          sectorCuenta: data.sector,
-          proNombre: 'LITIGANT_PLUS',
+          token: tokenOrBearer,
           dispositivo: 'WEB',
+          ip,
         });
       } catch (error: any) {
         this.logger.error(

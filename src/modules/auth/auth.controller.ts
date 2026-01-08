@@ -58,6 +58,21 @@ export class AuthController {
     @Body() body: MfaValidateDto,
   ) {
     const authorization = httpReq.headers.authorization || '';
-    return this.authService.validateMfaCode(authorization, body);
+    const clientIp = this.getClientIp(httpReq);
+    return this.authService.validateMfaCode(authorization, body, clientIp);
+  }
+
+  private getClientIp(req: Request): string {
+    const forwarded = req.headers['x-forwarded-for'];
+
+    if (Array.isArray(forwarded) && forwarded.length > 0) {
+      return forwarded[0];
+    }
+
+    if (typeof forwarded === 'string' && forwarded.length > 0) {
+      return forwarded.split(',')[0].trim();
+    }
+
+    return req.socket?.remoteAddress || req.ip || '';
   }
 }

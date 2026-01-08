@@ -26,7 +26,7 @@ export class BrevoService {
           params,
         })
         .then((response: any) => {
-          logger.log('EMAIL SENT SUCCESSFULLY: ', response);
+          logger.log('EMAIL SENT SUCCESSFULLY: ', response?.body?.messageId);
         })
         .catch((error: any) => {
           logger.log('ERROR SENDING EMAIL: ', error);
