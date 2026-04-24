@@ -10,9 +10,12 @@ export class ServiciosActivosAdquiridosService {
     private readonly serviciosActivosAdquiridosRepository: Repository<ServiciosActivosAdquirido>,
   ) {}
 
-  async getServicioInfoByCuentaAndServicio(cueId: number, proNombre: string) {
+  async getServicioInfoByCuentaAndServicio(
+    cueId: number,
+    proNombres: string[],
+  ) {
     return await this.serviciosActivosAdquiridosRepository.findOne({
-      where: { cueId, proNombre },
+      where: proNombres.map((proNombre) => ({ cueId, proNombre })),
     });
   }
 }

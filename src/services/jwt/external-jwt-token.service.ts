@@ -14,15 +14,15 @@ export class ExternalJwtTokenService {
     this.secret = this.configService.get<string>('JWT_EXTERNAL_SECRET');
   }
 
-  verify(token: string): JwtExternalPayload {
-    return this.jwtService.verify<JwtExternalPayload>(token, {
+  verify(token: string) {
+    return this.jwtService.verify(token, {
       secret: this.secret,
     });
   }
 
   getPayloadFromToken(tokenOrBearer: string): JwtExternalPayload {
     const token = this.extractToken(tokenOrBearer);
-    return this.verify(token);
+    return this.verify(token).data;
   }
 
   getDataFromToken(tokenOrBearer: string): JwtExternalPayload {

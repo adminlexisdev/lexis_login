@@ -42,10 +42,10 @@ export class UsuariosActivosService {
     const tokenResp = this.externalJwtTokenService.getPayloadFromToken(token);
 
     const cueId = tokenResp.cueId;
-    const proNombre = 'LITIGANT_PLUS';
+    const proNombres = ['LITIGANT_PLUS', 'LEXIS_TOTAL'];
 
     const usuarios = await this.usuariosActivosRepository.find({
-      where: { cueId, proNombre },
+      where: proNombres.map((proNombre) => ({ cueId, proNombre })),
       select: ['invId', 'usuId', 'usuNombre', 'usuApellido', 'usuEmail'],
       order: { usuApellido: 'ASC', usuNombre: 'ASC' },
     });
@@ -53,7 +53,7 @@ export class UsuariosActivosService {
     const servicioInfo =
       await this.serviciosActivosAdquiridosService.getServicioInfoByCuentaAndServicio(
         cueId,
-        proNombre,
+        proNombres,
       );
 
     return {
